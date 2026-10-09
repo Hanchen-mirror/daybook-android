@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict');
+const L=require('../assets/ledger.js');
+let count=0;const test=(name,fn)=>{fn();count++;console.log('PASS '+name);};
+const e=(id,type,cents,date,category='餐饮',note='')=>({id,type,cents,date,category,note,createdAt:'2026-10-09T00:00:00Z'});
+const rows=[e('a','expense',1010,'2026-10-09'),e('b','expense',20,'2026-10-09'),e('c','income',100000,'2026-10-01'),e('d','expense',999,'2026-09-30'),e('e','income',1,'2025-12-31')];
+test('整数分，避免 0.1 + 0.2 误差',()=>assert.equal(L.parseAmount('0.1')+L.parseAmount('0.2'),30));
+test('金额上下限与小数校验',()=>{assert.equal(L.parseAmount('999999999.99'),99999999999);for(const v of ['0','-1','1.001','NaN','1e3','1,000','','9999999999','01'])assert.throws(()=>L.parseAmount(v));});
+test('闰年和无效日期',()=>{assert.equal(L.validDate('2024-02-29'),true);for(const d of ['2026-02-29','2026-04-31','2026-13-01','1899-12-31','2026-1-01'])assert.equal(L.validDate(d),false);});
+test('月度边界与结余',()=>assert.deepEqual(L.totals(L.filter(rows,'2026-10')),{expense:1030,income:100000,balance:98970}));
+test('年度边界',()=>assert.equal(L.filter(rows,'2026').length,4));
+test('逐日汇总保留零收支日期',()=>{const bs=L.buckets(rows,'2026-10');assert.equal(bs.length,31);assert.equal(bs[8].expense,1030);assert.equal(bs[1].expense,0);});
+test('闰月天数',()=>assert.equal(L.buckets([],'2024-02').length,29));
+test('逐月汇总',()=>{const bs=L.buckets(rows,'2026',true);assert.equal(bs.length,12);assert.equal(bs[8].expense,999);assert.equal(bs[9].income,100000);});
+test('JSON 无损备份',()=>{const b=JSON.parse(L.backup(rows,'all'));assert.equal(b.schemaVersion,1);assert.equal(b.currency,'CNY');assert.deepEqual(b.entries,rows);});
+test('CSV BOM、换行、引号与公式防护',()=>{const text=L.csv([e('q','expense',1,'2026-10-09','餐饮','=1+2\n"test",')]);assert(text.startsWith('\uFEFF'));assert(text.includes('"\'=1+2\n""test"",'+'"'));assert(text.includes('"0.01"'));});
+test('HTML 报告转义用户文本',()=>{const text=L.report([e('x','expense',10,'2026-10-09','其他','<script>alert(1)</script>')],'全部');assert(!text.includes('<script>'));assert(text.includes('&lt;script&gt;'));});
+test('空账本统计',()=>assert.deepEqual(L.totals([]),{income:0,expense:0,balance:0}));
+console.log(`${count} tests passed`);

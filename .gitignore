@@ -1,0 +1,14 @@
+build/
+signing/
+work/
+*.apk
+*.apk.idsig
+*.p12
+*.jks
+*.keystore
+password.txt
+*.db
+*.db-*
+device-test-records.json
+.DS_Store
+Thumbs.db
