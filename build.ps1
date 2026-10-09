@@ -42,7 +42,9 @@ if (-not $KeyStore) {
   if (-not (Test-Path -LiteralPath $KeyStore)) { Invoke-Checked (Join-Path $JavaHome 'bin\keytool.exe') @('-genkeypair','-keystore',$KeyStore,'-storepass:env','DAYBOOK_KEY_PASSWORD','-keypass:env','DAYBOOK_KEY_PASSWORD','-alias',$KeyAlias,'-keyalg','RSA','-keysize','3072','-validity','10000','-dname','CN=Daybook Local, O=Personal, C=CN','-storetype','PKCS12') }
 }
 if (-not $env:DAYBOOK_KEY_PASSWORD) { throw '自定义签名密钥需要设置 DAYBOOK_KEY_PASSWORD 环境变量。' }
-$name=if ($DebugBuild) { 'daybook-qa.apk' } else { 'daybook-1.0.0.apk' }
+$version = ([xml]$manifest).manifest.GetAttribute('versionName','http://schemas.android.com/apk/res/android')
+if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Manifest 的版本号无效。' }
+$name=if ($DebugBuild) { 'daybook-qa.apk' } else { "daybook-$version.apk" }
 Invoke-Checked (Join-Path $bt.FullName 'apksigner.bat') @('sign','--ks',$KeyStore,'--ks-key-alias',$KeyAlias,'--ks-pass','env:DAYBOOK_KEY_PASSWORD','--key-pass','env:DAYBOOK_KEY_PASSWORD','--out',(Join-Path $build $name),(Join-Path $build 'aligned.apk'))
 Invoke-Checked (Join-Path $bt.FullName 'apksigner.bat') @('verify','--verbose',(Join-Path $build $name))
 Write-Output "APK: $(Join-Path $build $name)"

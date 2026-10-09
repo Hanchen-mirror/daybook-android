@@ -1,0 +1,30 @@
+/* 月历以周一为每周第一天，金额使用与统计一致的整数分数据。 */
+.nav-item{min-width:60px}
+.calendar-today{font-size:11px;color:var(--blue-dark);border:1px solid #d3e7fd;background:#edf6ff;border-radius:10px;padding:9px 12px;white-space:nowrap}
+.calendar-summary{display:grid;grid-template-columns:1.25fr 1.25fr .8fr;padding:18px 16px;gap:12px;margin-bottom:16px}
+.calendar-summary span{display:block;font-size:11px;color:var(--muted)}
+.calendar-summary strong{display:block;font-size:17px;font-weight:600;margin-top:8px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.calendar-summary small{font-size:11px;font-weight:400;color:var(--muted)}
+.calendar-summary .expense{color:var(--orange)}.calendar-summary .income{color:var(--green)}
+.calendar-card{padding:17px 12px 14px}
+.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.calendar-weekdays{padding-bottom:11px;text-align:center;color:#9da8b8;font-size:11px}
+.calendar-weekdays .weekend{color:#8bb5df}
+.calendar-day{height:87px;display:flex;flex-direction:column;align-items:center;padding:5px 2px 4px;border:1px solid transparent;border-radius:12px;min-width:0;background:#fcfdff;transition:background .12s,border-color .12s}
+.calendar-day.selected{background:#edf6ff;border-color:#a1cefb}
+.calendar-number{display:grid;place-items:center;width:25px;height:25px;font-size:13px;line-height:1;border-radius:50%;margin-bottom:4px;flex-shrink:0}
+.calendar-day.weekend .calendar-number{color:#7b9fc6}
+.calendar-day.today .calendar-number{box-shadow:inset 0 0 0 1.5px var(--blue);color:var(--blue-dark);background:#fff}
+.calendar-day.selected .calendar-number{background:var(--blue);color:white}
+.calendar-amount{display:block;font-size:9px;line-height:15px;min-height:15px;max-width:100%;font-weight:550;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calendar-amount.expense{color:#d88764}.calendar-amount.income{color:#42a385}
+.calendar-count{font-size:8px;color:#adb8c7;line-height:13px;margin-top:auto}
+.calendar-day.selected .calendar-count{color:#8caacd}
+.calendar-legend{display:flex;justify-content:center;align-items:center;gap:16px;padding-top:14px;border-top:1px solid #f0f3f8;margin-top:11px;font-size:10px;color:#97a3b5}
+.calendar-legend>span{display:flex;align-items:center;gap:5px}
+.calendar-today-key{color:#82a7cc}
+.calendar-note{font-size:10px;color:#a8b2c1;margin:11px 3px 0;text-align:center;line-height:1.8}
+.calendar-selected-head{margin-top:23px}.calendar-selected-head h3{font-size:16px;margin-bottom:5px}
+.calendar-selected-head+.actions{margin-top:0;margin-bottom:18px}
+@media(min-width:650px){.calendar-day{height:100px}.calendar-amount{font-size:11px;line-height:18px;min-height:18px}.calendar-number{width:29px;height:29px;font-size:15px}.calendar-summary{padding:22px}.calendar-summary strong{font-size:21px}}
+@media(max-width:360px){.calendar-card{padding:15px 8px 12px}.calendar-weekdays,.calendar-grid{gap:2px}.calendar-day{height:83px;border-radius:9px}.calendar-number{width:23px;height:23px;font-size:12px}.calendar-amount{font-size:8px}.calendar-summary{gap:8px;padding:16px 12px}.calendar-summary strong{font-size:14px}.calendar-today{padding:8px}.intro h2{font-size:20px}}

@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
                 String name = url.startsWith(ORIGIN) ? url.substring(ORIGIN.length()) : "";
                 if(name.isEmpty()) name = "index.html";
                 try {
-                    if(!url.startsWith(ORIGIN) || !name.matches("(index\\.html|app\\.css|app\\.js|ledger\\.js)")) throw new IOException();
+                    if(!url.startsWith(ORIGIN) || !name.matches("(index\\.html|app\\.css|calendar\\.css|app\\.js|ledger\\.js)")) throw new IOException();
                     String mime = name.endsWith("css") ? "text/css" : name.endsWith("js") ? "application/javascript" : "text/html";
                     return new WebResourceResponse(mime,"UTF-8",getAssets().open(name));
                 } catch(IOException e) { return new WebResourceResponse("text/plain","UTF-8",new ByteArrayInputStream(new byte[0])); }

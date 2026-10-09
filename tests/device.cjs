@@ -35,4 +35,5 @@ const ids=await evalJS(`JSON.parse(Native.list()).data.map(e=>e.id).filter(id=>!
 await evalJS('tab="home";month="2026-10";year="2026";render();window.scrollTo(0,0)');
 check('No horizontal overflow',await evalJS('document.documentElement.scrollWidth<=window.innerWidth'));
 console.log(passed+' device tests passed');c.close();}
-main().catch(err=>{console.error(err);process.exit(1);});
+if(require.main===module)main().catch(err=>{console.error(err);process.exit(1);});
+else module.exports={connect,shell};
